@@ -1,0 +1,17 @@
+{
+  "image_size": [512, 512],
+  "watermark_size": 32,
+  "watermark_strength": 7.0,
+  "openclip_model": "ViT-B-32",
+  "openclip_pretrained": "laion2b_s34b_b79k",
+  "weights": {
+    "alpha": 0.25,
+    "beta": 0.25,
+    "gamma": 0.2,
+    "delta": 0.3
+  },
+  "labels": {
+    "authentic_min": 0.85,
+    "suspicious_min": 0.6
+  }
+}

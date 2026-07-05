@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TrustHeritageRecord",
+  "type": "object",
+  "required": ["metadata", "payload", "paths", "hashes"],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": ["asset_id", "title", "category", "institution", "date_registered"],
+      "properties": {
+        "asset_id": {"type": "string"},
+        "title": {"type": "string"},
+        "category": {"type": "string"},
+        "institution": {"type": "string"},
+        "date_registered": {"type": "string"}
+      }
+    },
+    "payload": {"type": "string"},
+    "paths": {
+      "type": "object",
+      "required": ["archived_image", "watermarked_image"],
+      "properties": {
+        "archived_image": {"type": "string"},
+        "watermarked_image": {"type": "string"}
+      }
+    },
+    "hashes": {
+      "type": "object",
+      "required": [
+        "original_image_sha256",
+        "watermarked_image_sha256",
+        "metadata_sha256"
+      ],
+      "properties": {
+        "original_image_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "watermarked_image_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "metadata_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    }
+  }
+}

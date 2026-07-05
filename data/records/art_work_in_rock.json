@@ -1,0 +1,19 @@
+{
+  "hashes": {
+    "metadata_sha256": "0c0f59961d4a7e91f625efb98655caa154aa94cf1f9a005f4acdc3c76ec11e40",
+    "original_image_sha256": "4e157fd728f4acae2a728161e03a6dbae3c59c86a3001926d672c5346d4edd09",
+    "watermarked_image_sha256": "f919977668c750707499c4c8cea59c20425b9e6d177b9ef5a16bbbd5d72ebc68"
+  },
+  "metadata": {
+    "asset_id": "art_work_in_rock",
+    "category": "Unknown",
+    "date_registered": "2026-07-04T17:14:38.874431+00:00",
+    "institution": "Unknown",
+    "title": "Untitled"
+  },
+  "paths": {
+    "archived_image": "data\\archived_images\\art_work_in_rock.png",
+    "watermarked_image": "data\\watermarked_images\\art_work_in_rock_watermarked.png"
+  },
+  "payload": "art_work_in_rock|Untitled|2026-07-04T17:14:38.874431+00:00"
+}

@@ -1,0 +1,19 @@
+{
+  "hashes": {
+    "metadata_sha256": "09059298306affe25c4b0b66b52aed206a55f07af73507ae0dcbd4830058d2a2",
+    "original_image_sha256": "340b1700666e056de47d5c8b0182a71d7cd00fee3400894dae8237d034d86e37",
+    "watermarked_image_sha256": "cf2549cae534a3bfc9e934ef0fa29fcf95d4fe9232670395c272edf585814319"
+  },
+  "metadata": {
+    "asset_id": "christian_murals_of_paliekkara_1",
+    "category": "Unknown",
+    "date_registered": "2026-07-04T17:10:35.664829+00:00",
+    "institution": "Unknown",
+    "title": "Untitled"
+  },
+  "paths": {
+    "archived_image": "data\\archived_images\\christian_murals_of_paliekkara_1.png",
+    "watermarked_image": "data\\watermarked_images\\christian_murals_of_paliekkara_1_watermarked.png"
+  },
+  "payload": "christian_murals_of_paliekkara_1|Untitled|2026-07-04T17:10:35.664829+00:00"
+}

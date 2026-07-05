@@ -1,0 +1,19 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.ipynb_checkpoints/
+
+# Generated runtime artifacts
+data/archived_images/
+data/watermarked_images/
+data/suspect_uploads/
+data/outputs/
+@"
+.venv/
+__pycache__/
+*.pyc
+.env
+.streamlit/secrets.toml
+"@ | Set-Content .gitignore
