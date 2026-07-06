@@ -73,6 +73,79 @@ def provenance_status(provenance: dict) -> str:
     return "Exact hash match" if provenance.get("exact_match") else "Hash mismatch"
 
 
+def show_acs_legend() -> None:
+    """Show the decision bands used by the ACS classifier."""
+    st.caption(
+        "ACS bands: >= 0.85 Authentic (high consistency) | "
+        "0.60-0.85 Suspicious (mixed evidence) | "
+        "< 0.60 Likely tampered or significantly altered."
+    )
+
+
+def show_semantic_note(semantic: dict, active_weights: dict) -> None:
+    """Explain when semantic evidence is unavailable and weights were renormalized."""
+    if semantic.get("available", semantic.get("semantic_score") is not None):
+        return
+
+    notes = semantic.get("notes") or ["Semantic similarity was not used for this run."]
+    st.info(
+        "Semantic similarity is unavailable or disabled. ACS was computed using "
+        "the remaining active evidence weights shown below."
+    )
+    for note in notes:
+        st.caption(f"- {note}")
+    st.caption(f"Active weights: {active_weights}")
+
+
+def show_interpretation_panel(interpretation: dict) -> None:
+    """Render rules-based interpretation results for demo presentation."""
+    if not interpretation:
+        return
+
+    top_cols = st.columns(3)
+    top_cols[0].markdown(f"**Decision**  \n{interpretation.get('decision_label', 'N/A')}")
+    top_cols[1].markdown(f"**Review risk**  \n{interpretation.get('risk_label', 'N/A')}")
+    top_cols[2].markdown(f"**Evidence confidence**  \n{interpretation.get('confidence_label', 'N/A')}")
+
+    recommendation = interpretation.get("review_recommendation")
+    if recommendation:
+        st.info(recommendation)
+
+    narrative = interpretation.get("narrative_explanation")
+    if narrative:
+        st.write(narrative)
+
+    caution_flags = interpretation.get("caution_flags") or []
+    if caution_flags:
+        st.warning("Caution flags")
+        for flag in caution_flags:
+            st.markdown(f"- {flag}")
+
+
+def show_heritage_risk_panel(heritage_risk: dict) -> None:
+    """Render semantic-integrity risk and strongest heuristic cues."""
+    if not heritage_risk:
+        return
+
+    st.markdown("**Heritage-sensitive difference review**")
+    risk_cols = st.columns(2)
+    risk_cols[0].metric(
+        "Semantic Integrity Risk",
+        format_score(heritage_risk.get("semantic_integrity_risk")),
+    )
+    risk_cols[1].metric("Risk label", heritage_risk.get("risk_label", "N/A"))
+
+    strongest_cues = heritage_risk.get("strongest_cues") or []
+    if strongest_cues:
+        st.caption("Strongest heuristic cues")
+        for cue in strongest_cues:
+            st.markdown(f"- {cue.get('cue', 'cue')}: {format_score(cue.get('score'))}")
+
+    method_note = heritage_risk.get("method_note")
+    if method_note:
+        st.caption(method_note)
+
+
 register_tab, verify_tab = st.tabs(["Register archival image", "Verify suspect image"])
 
 with register_tab:
@@ -163,6 +236,12 @@ with verify_tab:
                 with st.spinner("Running verification pipeline..."):
                     result = verify_image(selected_record, suspect_path, use_semantics=use_semantics)
 
+                scores = result["scores"]
+                interpretation = result.get("interpretation", {})
+                heritage_risk = result.get("heritage_risk", {})
+                semantic = result.get("semantic", {})
+                provenance = result.get("provenance", {})
+
                 image_cols = st.columns(3)
                 with image_cols[0]:
                     st.image(
@@ -182,28 +261,73 @@ with verify_tab:
                         caption="Forensic difference heatmap",
                         use_container_width=True,
                     )
+                    st.caption(
+                        "Heatmap colors mark relative visual-difference concentration only; "
+                        "they are not proof of tampering."
+                    )
 
-                scores = result["scores"]
-                metric_cols = st.columns(5)
-                metric_cols[0].metric("Payload recovery similarity", format_score(scores["watermark_score"]))
-                metric_cols[1].metric("Exact hash provenance", provenance_status(result["provenance"]))
-                metric_cols[2].metric("Heuristic forensic consistency", format_score(scores["forensic_score"]))
-                metric_cols[3].metric("Embedding similarity score", format_score(scores["semantic_score"]))
-                metric_cols[4].metric("ACS", format_score(scores["acs"]))
-
-                st.markdown(f"### {scores['label']}")
-                st.write(scores["explanation"])
-                st.caption(
-                    "The forensic layer is a lightweight consistency estimate, not proof of tampering."
+                st.divider()
+                st.markdown("### Verification dashboard")
+                headline_cols = st.columns(3)
+                headline_cols[0].metric("ACS", format_score(scores["acs"]))
+                headline_cols[1].metric(
+                    "Evidence agreement",
+                    format_score(scores.get("evidence_agreement")),
                 )
+                headline_cols[2].metric(
+                    "Semantic Integrity Risk",
+                    format_score(heritage_risk.get("semantic_integrity_risk")),
+                )
+                st.markdown(f"**ACS label:** {scores['label']}")
+                show_acs_legend()
+
+                st.markdown("#### Interpretation for review")
+                show_interpretation_panel(interpretation)
+
+                st.markdown("#### Evidence summary")
+                metric_cols = st.columns(5)
+                metric_cols[0].metric(
+                    "Payload recovery similarity",
+                    format_score(scores["watermark_score"]),
+                    help="Fraction of expected watermark payload bits recovered from the suspect image.",
+                )
+                metric_cols[1].metric(
+                    "Exact hash provenance",
+                    provenance_status(provenance),
+                    help="Strict SHA-256 comparison with the archived watermarked image.",
+                )
+                metric_cols[2].metric(
+                    "Heuristic forensic consistency",
+                    format_score(scores["forensic_score"]),
+                    help="Lightweight consistency score from SSIM, difference, histogram, and edge cues.",
+                )
+                metric_cols[3].metric(
+                    "Embedding similarity score",
+                    format_score(scores["semantic_score"]),
+                    help="OpenCLIP image-embedding similarity when semantic analysis is enabled and available.",
+                )
+                metric_cols[4].metric(
+                    "Active evidence count",
+                    str(scores.get("active_evidence_count", "N/A")),
+                    help="Number of available evidence sources used in ACS fusion.",
+                )
+
+                st.caption(
+                    "The forensic layer is a lightweight consistency estimate, not proof of tampering. "
+                    "ACS is a heuristic fused score for review support."
+                )
+                show_semantic_note(semantic, scores.get("active_weights", {}))
+
+                st.markdown("#### Heritage-sensitive risk cues")
+                show_heritage_risk_panel(heritage_risk)
 
                 with st.expander("Detailed forensic component values", expanded=False):
                     st.json(result["forensic"])
                 with st.expander("Provenance and semantic evidence", expanded=False):
                     st.json(
                         {
-                            "provenance": result["provenance"],
-                            "semantic": result["semantic"],
+                            "provenance": provenance,
+                            "semantic": semantic,
                         }
                     )
                 with st.expander("Active ACS weights", expanded=False):
