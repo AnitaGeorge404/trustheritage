@@ -11,8 +11,8 @@ This is a research prototype for demos, screenshots, and presentations. It is no
 - Store SHA-256 hashes for original image bytes, watermarked image bytes, and canonical metadata JSON.
 - Verify a suspect image using four evidence layers:
   - DWT watermark recovery.
-  - Local provenance hash consistency.
-  - Lightweight image forensics with SSIM, absolute difference, histogram consistency, and heatmap output.
+  - Local provenance hash consistency plus a lightweight perceptual-hash continuity hint.
+  - Lightweight image forensics with ORB alignment, SSIM, absolute difference, histogram consistency, edge consistency, suspicious-region ratio, and heatmap output.
   - OpenCLIP image embedding similarity on CPU.
 - Fuse evidence into an Authenticity Confidence Score (ACS).
 - Run the workflow through a minimal Streamlit interface.
@@ -98,16 +98,16 @@ After registering an image, you can create demo suspect variants:
 python scripts/generate_attacks.py data/watermarked_images/YOUR_ASSET_watermarked.png --output data/suspect_uploads
 ```
 
-This creates cropped, blurred, and contrast-modified variants that can be uploaded in the verification tab.
+This creates cropped, blurred, contrast-modified, JPEG-compressed, occluded, and slightly rotated variants that can be uploaded in the verification tab.
 
 ## How The Modules Work
 
 - `preprocessing.py`: loads images, converts them to standard BGR format, and resizes them to a fixed 512x512 shape.
 - `watermarking.py`: converts a text payload to deterministic binary bits, embeds those bits into the DWT horizontal-detail band of the luminance channel, and estimates recovery score during extraction.
-- `hashing.py`: computes SHA-256 digests for files and metadata and checks whether a suspect image is an exact byte-level match to the archived watermarked image.
-- `forensics.py`: compares reference and suspect images with SSIM, absolute difference, histogram correlation, and produces a heatmap for suspicious regions.
+- `hashing.py`: computes SHA-256 digests for files and metadata, checks exact byte-level provenance, and reports a DCT perceptual-hash similarity when the file is visually close but not byte-identical.
+- `forensics.py`: aligns the suspect to the reference with ORB feature matching when possible, compares the aligned images with SSIM, absolute difference, histogram correlation, and edge consistency, then produces a heatmap for suspicious regions.
 - `semantics.py`: uses OpenCLIP image embeddings and cosine similarity to estimate whether the archived and suspect images are semantically similar.
-- `scoring.py`: computes `ACS = alpha W + beta P + gamma F + delta S` with default weights 0.25, 0.25, 0.20, and 0.30.
+- `scoring.py`: computes `ACS = alpha W + beta P + gamma F + delta S` with default weights 0.25, 0.25, 0.20, and 0.30. If semantics is disabled, available evidence weights are renormalized instead of treating the missing semantic score as zero.
 - `pipeline.py`: connects registration and verification into reusable backend functions for the app and notebook.
 
 ## ACS Labels

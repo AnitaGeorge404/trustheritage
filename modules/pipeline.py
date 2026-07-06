@@ -89,13 +89,14 @@ def verify_image(record_path: Path, suspect_path: Path, use_semantics: bool = Tr
     provenance = verify_provenance(
         suspect_path,
         archived_watermarked_hash=record["hashes"]["watermarked_image_sha256"],
+        archived_watermarked_path=watermarked_path,
     )
     forensic = analyze_forensics(watermarked_image, suspect_image)
 
     if use_semantics:
         semantic = semantic_similarity(archived_image, suspect_image, device="cpu")
     else:
-        semantic = {"cosine_similarity": None, "semantic_score": 0.0}
+        semantic = {"cosine_similarity": None, "semantic_score": None}
 
     heatmap_path = OUTPUTS_DIR / f"{record['metadata']['asset_id']}_heatmap.png"
     save_image(heatmap_path, forensic["heatmap"])

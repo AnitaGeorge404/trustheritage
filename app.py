@@ -59,6 +59,11 @@ def show_hashes(hashes: dict[str, str]) -> None:
     )
 
 
+def format_score(value: float | None) -> str:
+    """Format optional score values for Streamlit metrics."""
+    return "N/A" if value is None else f"{value:.3f}"
+
+
 register_tab, verify_tab = st.tabs(["Register archival image", "Verify suspect image"])
 
 with register_tab:
@@ -163,11 +168,11 @@ with verify_tab:
 
                 scores = result["scores"]
                 metric_cols = st.columns(5)
-                metric_cols[0].metric("Watermark", f"{scores['watermark_score']:.3f}")
-                metric_cols[1].metric("Provenance", f"{scores['provenance_score']:.3f}")
-                metric_cols[2].metric("Forensic", f"{scores['forensic_score']:.3f}")
-                metric_cols[3].metric("Semantic", f"{scores['semantic_score']:.3f}")
-                metric_cols[4].metric("ACS", f"{scores['acs']:.3f}")
+                metric_cols[0].metric("Watermark", format_score(scores["watermark_score"]))
+                metric_cols[1].metric("Provenance", format_score(scores["provenance_score"]))
+                metric_cols[2].metric("Forensic", format_score(scores["forensic_score"]))
+                metric_cols[3].metric("Semantic", format_score(scores["semantic_score"]))
+                metric_cols[4].metric("ACS", format_score(scores["acs"]))
 
                 st.markdown(f"### {scores['label']}")
                 st.write(scores["explanation"])
@@ -178,6 +183,7 @@ with verify_tab:
                         "forensic": result["forensic"],
                         "semantic": result["semantic"],
                         "weights": scores["weights"],
+                        "active_weights": scores["active_weights"],
                     }
                 )
             except Exception as exc:
