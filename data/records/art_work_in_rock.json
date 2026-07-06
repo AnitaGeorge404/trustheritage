@@ -1,13 +1,13 @@
 {
   "hashes": {
-    "metadata_sha256": "0c0f59961d4a7e91f625efb98655caa154aa94cf1f9a005f4acdc3c76ec11e40",
+    "metadata_sha256": "e54d8840e92512b3fbce175bd33f8aa3689895027d6ea73fcae092cdb17ae4fd",
     "original_image_sha256": "4e157fd728f4acae2a728161e03a6dbae3c59c86a3001926d672c5346d4edd09",
-    "watermarked_image_sha256": "f919977668c750707499c4c8cea59c20425b9e6d177b9ef5a16bbbd5d72ebc68"
+    "watermarked_image_sha256": "2331b335b7780d27d85d5f022c81be968e13bc83adb6cc7c2748582828d58f0a"
   },
   "metadata": {
     "asset_id": "art_work_in_rock",
     "category": "Unknown",
-    "date_registered": "2026-07-04T17:14:38.874431+00:00",
+    "date_registered": "2026-07-06T06:28:33.214936+00:00",
     "institution": "Unknown",
     "title": "Untitled"
   },
@@ -15,5 +15,9 @@
     "archived_image": "data\\archived_images\\art_work_in_rock.png",
     "watermarked_image": "data\\watermarked_images\\art_work_in_rock_watermarked.png"
   },
-  "payload": "art_work_in_rock|Untitled|2026-07-04T17:14:38.874431+00:00"
+  "payload": "art_work_in_rock|Untitled|2026-07-06T06:28:33.214936+00:00",
+  "quality_metrics": {
+    "psnr_original_vs_watermarked": 39.8107562172896,
+    "ssim_original_vs_watermarked": 0.9774997944936895
+  }
 }

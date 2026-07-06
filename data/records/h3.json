@@ -1,0 +1,23 @@
+{
+  "hashes": {
+    "metadata_sha256": "f48e719f82de8ea53629ad6d9fdc03ae092de4d877680178ced49c843046a6c0",
+    "original_image_sha256": "72c91f8d6d308707939b81a6a5a47d364f8d6e4dd7769e4b1b2010271a901fa0",
+    "watermarked_image_sha256": "15b46addf84645bb61f1381eb833413e41bb574f5315d4c85d7329a8aa570cab"
+  },
+  "metadata": {
+    "asset_id": "h3",
+    "category": "Unknown",
+    "date_registered": "2026-07-06T08:16:23.062420+00:00",
+    "institution": "Unknown",
+    "title": "DP-14201-003"
+  },
+  "paths": {
+    "archived_image": "data\\archived_images\\h3.png",
+    "watermarked_image": "data\\watermarked_images\\h3_watermarked.png"
+  },
+  "payload": "h3|DP-14201-003|2026-07-06T08:16:23.062420+00:00",
+  "quality_metrics": {
+    "psnr_original_vs_watermarked": 39.96890206656956,
+    "ssim_original_vs_watermarked": 0.9253279159544054
+  }
+}
