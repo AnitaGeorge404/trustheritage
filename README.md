@@ -8,15 +8,17 @@ This is a research prototype for demos, screenshots, and presentations. It is no
 
 - Register an original cultural heritage image.
 - Embed a small invisible watermark using a discrete wavelet transform (DWT).
+- Report watermark imperceptibility with PSNR and SSIM during registration.
 - Store SHA-256 hashes for original image bytes, watermarked image bytes, and canonical metadata JSON.
 - Verify a suspect image using four evidence layers:
   - DWT watermark recovery.
-  - Local provenance hash consistency plus a lightweight perceptual-hash continuity hint.
+  - Exact SHA-256 provenance consistency.
   - Lightweight image forensics with ORB alignment, SSIM, absolute difference, histogram consistency, edge consistency, suspicious-region ratio, and heatmap output.
   - OpenCLIP image embedding similarity on CPU.
 - Fuse evidence into an Authenticity Confidence Score (ACS).
 - Run the workflow through a minimal Streamlit interface.
-- Generate demo suspect images with crop, blur, and contrast attacks.
+- Generate demo suspect images with crop, blur, contrast, JPEG compression, brightness, noise, occlusion, rotation, sharpening, and desaturation attacks.
+- Run batch evaluation over a folder of suspect images and export detailed plus grouped CSV results.
 
 ## Folder Structure
 
@@ -88,7 +90,7 @@ Then open the local URL printed by Streamlit, usually `http://localhost:8501`.
 6. Upload a suspect image.
 7. Click **Verify**.
 
-The app displays the archived image, suspect image, forensic heatmap, individual evidence scores, ACS, label, and a short interpretation.
+The app displays the archived image, suspect image, forensic difference heatmap, individual evidence scores, ACS, label, active fusion weights, forensic component values, and a short interpretation. Registration also displays PSNR and SSIM between the original and watermarked images.
 
 ## Attack Generator
 
@@ -98,31 +100,47 @@ After registering an image, you can create demo suspect variants:
 python scripts/generate_attacks.py data/watermarked_images/YOUR_ASSET_watermarked.png --output data/suspect_uploads
 ```
 
-This creates cropped, blurred, contrast-modified, JPEG-compressed, occluded, and slightly rotated variants that can be uploaded in the verification tab.
+This creates cropped, blurred, contrast-modified, JPEG-compressed, brightness-shifted, noisy, occluded, rotated, sharpened, and desaturated variants that can be uploaded in the verification tab.
+
+## Batch Evaluation
+
+After generating suspect variants, run a batch evaluation for one archived record:
+
+```bash
+python scripts/evaluate_batch.py data/records/YOUR_ASSET.json data/suspect_uploads --no-semantics
+```
+
+By default this writes:
+
+- `data/outputs/batch_evaluation.csv`: one row per suspect image.
+- `data/outputs/batch_evaluation_summary.csv`: grouped mean scores by inferred attack type.
+
+Remove `--no-semantics` to include OpenCLIP similarity. If semantics is disabled or unavailable, ACS weights are renormalized over the active evidence layers rather than treating the missing semantic score as zero.
 
 ## How The Modules Work
 
 - `preprocessing.py`: loads images, converts them to standard BGR format, and resizes them to a fixed 512x512 shape.
 - `watermarking.py`: converts a text payload to deterministic binary bits, embeds those bits into the DWT horizontal-detail band of the luminance channel, and estimates recovery score during extraction.
-- `hashing.py`: computes SHA-256 digests for files and metadata, checks exact byte-level provenance, and reports a DCT perceptual-hash similarity when the file is visually close but not byte-identical.
-- `forensics.py`: aligns the suspect to the reference with ORB feature matching when possible, compares the aligned images with SSIM, absolute difference, histogram correlation, and edge consistency, then produces a heatmap for suspicious regions.
+- `hashing.py`: computes SHA-256 digests for files and metadata. Provenance contributes `1.0` only for an exact watermarked-image hash match and `0.0` for a mismatch. A DCT perceptual-hash similarity may be reported as a non-fused near-match hint.
+- `forensics.py`: aligns the suspect to the reference with ORB feature matching when possible, compares the aligned images with SSIM, absolute difference, histogram correlation, and edge consistency, then produces a heatmap for suspicious regions. These are heuristic consistency cues, not proof of tampering.
 - `semantics.py`: uses OpenCLIP image embeddings and cosine similarity to estimate whether the archived and suspect images are semantically similar.
 - `scoring.py`: computes `ACS = alpha W + beta P + gamma F + delta S` with default weights 0.25, 0.25, 0.20, and 0.30. If semantics is disabled, available evidence weights are renormalized instead of treating the missing semantic score as zero.
 - `pipeline.py`: connects registration and verification into reusable backend functions for the app and notebook.
 
 ## ACS Labels
 
-- `Authentic`: ACS >= 0.85
-- `Suspicious`: 0.60 <= ACS < 0.85
-- `Likely Tampered`: ACS < 0.60
+- `Authentic (high consistency)`: ACS >= 0.85
+- `Suspicious (mixed evidence)`: 0.60 <= ACS < 0.85
+- `Likely tampered or significantly altered`: ACS < 0.60
 
 ## Limitations
 
 - The watermark is intentionally simple and can be damaged by resizing, compression, cropping, or aggressive edits.
-- The forensic layer is a lightweight signal, not a deep forgery detector.
+- PSNR and SSIM measure image similarity, not cultural or historical authenticity.
+- The forensic layer is a lightweight consistency estimate, not a deep forgery detector or proof of tampering.
 - OpenCLIP semantic similarity says whether two images are visually/semantically close; it does not prove authenticity.
-- Hash provenance only confirms exact byte-level consistency with the local archived watermarked file.
-- No benchmark claims are made or implied.
+- Hash provenance only confirms exact byte-level consistency with the local archived watermarked file. Recompressed or edited images should fail exact provenance even when they remain visually similar.
+- Batch CSV outputs support repeatable demo evaluation, but they are not benchmark claims unless paired with a documented dataset and protocol.
 
 ## Disclaimer
 

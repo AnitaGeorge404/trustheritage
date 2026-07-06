@@ -27,7 +27,18 @@ def contrast_modified(image: np.ndarray) -> np.ndarray:
     return cv2.convertScaleAbs(image, alpha=1.25, beta=8)
 
 
-def jpeg_roundtrip(image: np.ndarray, quality: int = 35) -> np.ndarray:
+def brightness_shift(image: np.ndarray, beta: int) -> np.ndarray:
+    return cv2.convertScaleAbs(image, alpha=1.0, beta=beta)
+
+
+def gaussian_noise(image: np.ndarray, sigma: float = 8.0) -> np.ndarray:
+    rng = np.random.default_rng(42)
+    noise = rng.normal(0.0, sigma, image.shape)
+    noisy = image.astype(np.float32) + noise
+    return np.clip(noisy, 0, 255).astype(np.uint8)
+
+
+def jpeg_roundtrip(image: np.ndarray, quality: int = 40) -> np.ndarray:
     ok, encoded = cv2.imencode(".jpg", image, [int(cv2.IMWRITE_JPEG_QUALITY), quality])
     if not ok:
         raise IOError("Could not encode JPEG attack variant.")
@@ -44,6 +55,18 @@ def occlude_center(image: np.ndarray) -> np.ndarray:
     y0, y1 = int(h * 0.38), int(h * 0.62)
     cv2.rectangle(result, (x0, y0), (x1, y1), (24, 24, 24), thickness=-1)
     return result
+
+
+def sharpen(image: np.ndarray) -> np.ndarray:
+    kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]], dtype=np.float32)
+    return cv2.filter2D(image, -1, kernel)
+
+
+def desaturate(image: np.ndarray) -> np.ndarray:
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV).astype(np.float32)
+    hsv[:, :, 1] *= 0.35
+    hsv = np.clip(hsv, 0, 255).astype(np.uint8)
+    return cv2.cvtColor(hsv, cv2.COLOR_HSV2BGR)
 
 
 def rotate_slightly(image: np.ndarray, degrees: float = 3.0) -> np.ndarray:
@@ -66,9 +89,14 @@ def main() -> None:
     save(args.output / f"{stem}_cropped.png", crop_and_resize(image))
     save(args.output / f"{stem}_blurred.png", cv2.GaussianBlur(image, (9, 9), 0))
     save(args.output / f"{stem}_contrast.png", contrast_modified(image))
-    save(args.output / f"{stem}_jpeg_q35.png", jpeg_roundtrip(image))
-    save(args.output / f"{stem}_occluded.png", occlude_center(image))
-    save(args.output / f"{stem}_rotated.png", rotate_slightly(image))
+    save(args.output / f"{stem}_jpeg_q40.png", jpeg_roundtrip(image, quality=40))
+    save(args.output / f"{stem}_bright_plus20.png", brightness_shift(image, beta=20))
+    save(args.output / f"{stem}_bright_minus20.png", brightness_shift(image, beta=-20))
+    save(args.output / f"{stem}_noise_sigma8.png", gaussian_noise(image, sigma=8.0))
+    save(args.output / f"{stem}_occlusion_patch.png", occlude_center(image))
+    save(args.output / f"{stem}_rotate_3deg.png", rotate_slightly(image, degrees=3.0))
+    save(args.output / f"{stem}_sharpened.png", sharpen(image))
+    save(args.output / f"{stem}_desaturated.png", desaturate(image))
     print(f"Attack variants written to {args.output.resolve()}")
 
 

@@ -41,6 +41,10 @@ ensure_directories(
 st.set_page_config(page_title="TrustHeritage Prototype", page_icon="TH", layout="wide")
 st.title("TrustHeritage Prototype")
 st.caption("Local research demo for cultural heritage image authenticity verification.")
+st.warning(
+    "Research prototype: ACS is a heuristic fused score. Results support expert review "
+    "and triage, not final certification or legal attribution.",
+)
 
 
 def save_upload(uploaded_file, destination: Path) -> Path:
@@ -62,6 +66,11 @@ def show_hashes(hashes: dict[str, str]) -> None:
 def format_score(value: float | None) -> str:
     """Format optional score values for Streamlit metrics."""
     return "N/A" if value is None else f"{value:.3f}"
+
+
+def provenance_status(provenance: dict) -> str:
+    """Return a clear provenance label for exact hash evidence."""
+    return "Exact hash match" if provenance.get("exact_match") else "Hash mismatch"
 
 
 register_tab, verify_tab = st.tabs(["Register archival image", "Verify suspect image"])
@@ -111,6 +120,14 @@ with register_tab:
                     caption="Watermarked archival image",
                     use_container_width=True,
                 )
+            quality = result["quality_metrics"]
+            st.markdown("**Watermark imperceptibility metrics**")
+            quality_cols = st.columns(2)
+            quality_cols[0].metric("PSNR original vs watermarked", f"{quality['psnr_original_vs_watermarked']:.2f} dB")
+            quality_cols[1].metric("SSIM original vs watermarked", f"{quality['ssim_original_vs_watermarked']:.4f}")
+            st.caption(
+                "Higher PSNR indicates lower visible distortion. SSIM close to 1.0 means image structure is well preserved."
+            )
             st.markdown("**Generated SHA-256 hashes**")
             show_hashes(result["record"]["hashes"])
             st.json(result["record"]["metadata"])
@@ -168,24 +185,34 @@ with verify_tab:
 
                 scores = result["scores"]
                 metric_cols = st.columns(5)
-                metric_cols[0].metric("Watermark", format_score(scores["watermark_score"]))
-                metric_cols[1].metric("Provenance", format_score(scores["provenance_score"]))
-                metric_cols[2].metric("Forensic", format_score(scores["forensic_score"]))
-                metric_cols[3].metric("Semantic", format_score(scores["semantic_score"]))
+                metric_cols[0].metric("Payload recovery similarity", format_score(scores["watermark_score"]))
+                metric_cols[1].metric("Exact hash provenance", provenance_status(result["provenance"]))
+                metric_cols[2].metric("Heuristic forensic consistency", format_score(scores["forensic_score"]))
+                metric_cols[3].metric("Embedding similarity score", format_score(scores["semantic_score"]))
                 metric_cols[4].metric("ACS", format_score(scores["acs"]))
 
                 st.markdown(f"### {scores['label']}")
                 st.write(scores["explanation"])
-                st.markdown("**Detailed evidence**")
-                st.json(
-                    {
-                        "provenance": result["provenance"],
-                        "forensic": result["forensic"],
-                        "semantic": result["semantic"],
-                        "weights": scores["weights"],
-                        "active_weights": scores["active_weights"],
-                    }
+                st.caption(
+                    "The forensic layer is a lightweight consistency estimate, not proof of tampering."
                 )
+
+                with st.expander("Detailed forensic component values", expanded=False):
+                    st.json(result["forensic"])
+                with st.expander("Provenance and semantic evidence", expanded=False):
+                    st.json(
+                        {
+                            "provenance": result["provenance"],
+                            "semantic": result["semantic"],
+                        }
+                    )
+                with st.expander("Active ACS weights", expanded=False):
+                    st.json(
+                        {
+                            "configured_weights": scores["weights"],
+                            "active_weights": scores["active_weights"],
+                        }
+                    )
             except Exception as exc:
                 LOGGER.exception("Verification failed")
                 st.error(f"Verification failed: {exc}")

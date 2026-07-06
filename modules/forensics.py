@@ -107,5 +107,7 @@ def analyze_forensics(reference: np.ndarray, suspect: np.ndarray) -> dict:
         "edge_score": float(max(0.0, min(edge_score, 1.0))),
         "suspicious_region_ratio": suspicious_region_ratio,
         "alignment": alignment,
+        "difference_map": abs_diff,
+        "suspicious_mask": suspicious_mask.astype(np.uint8) * 255,
         "heatmap": heatmap,
     }

@@ -36,6 +36,17 @@
         "watermarked_image_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
         "metadata_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
       }
+    },
+    "quality_metrics": {
+      "type": "object",
+      "required": [
+        "psnr_original_vs_watermarked",
+        "ssim_original_vs_watermarked"
+      ],
+      "properties": {
+        "psnr_original_vs_watermarked": {"type": "number"},
+        "ssim_original_vs_watermarked": {"type": "number"}
+      }
     }
   }
 }

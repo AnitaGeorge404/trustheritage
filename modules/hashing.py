@@ -61,7 +61,7 @@ def verify_provenance(
     archived_watermarked_hash: str,
     archived_watermarked_path: Path | None = None,
 ) -> dict:
-    """Compare exact file provenance and optional perceptual continuity."""
+    """Compare exact file provenance and report any near-match hint separately."""
     suspect_hash = sha256_file(suspect_path)
     exact_match = suspect_hash == archived_watermarked_hash
     archived_phash = None
@@ -73,18 +73,21 @@ def verify_provenance(
         suspect_phash = perceptual_hash(suspect_path)
         visual_hash_similarity = hash_similarity(archived_phash, suspect_phash)
 
+    notes = []
     if exact_match:
-        provenance_score = 1.0
-    elif visual_hash_similarity is not None:
-        provenance_score = 0.10 + 0.60 * max(0.0, min(visual_hash_similarity, 1.0))
+        notes.append("Exact SHA-256 match to archived watermarked image.")
     else:
-        provenance_score = 0.10
+        notes.append("SHA-256 mismatch; provenance contributes no positive fused evidence.")
+        if visual_hash_similarity is not None:
+            notes.append("Perceptual hash similarity is reported only as a non-fused near-match hint.")
 
     return {
         "suspect_hash": suspect_hash,
+        "archived_watermarked_hash": archived_watermarked_hash,
         "exact_match": exact_match,
         "archived_perceptual_hash": archived_phash,
         "suspect_perceptual_hash": suspect_phash,
         "visual_hash_similarity": visual_hash_similarity,
-        "provenance_score": float(max(0.0, min(provenance_score, 1.0))),
+        "provenance_score": 1.0 if exact_match else 0.0,
+        "notes": notes,
     }
