@@ -32,6 +32,8 @@ def sha256_metadata(metadata: dict) -> str:
 
 def perceptual_hash(path: Path, hash_size: int = 16) -> str:
     """Return a compact DCT perceptual hash for visually stable provenance hints."""
+    if not path.exists():
+        raise FileNotFoundError(f"Image not found: {path}")
     image = cv2.imread(str(path), cv2.IMREAD_GRAYSCALE)
     if image is None:
         raise ValueError(f"Could not read image for perceptual hash: {path}")

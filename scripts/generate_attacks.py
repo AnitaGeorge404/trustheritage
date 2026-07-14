@@ -81,6 +81,8 @@ def main() -> None:
     parser.add_argument("--output", type=Path, default=Path("data/suspect_uploads"))
     args = parser.parse_args()
 
+    if not args.image.exists():
+        raise FileNotFoundError(f"Image not found: {args.image}")
     image = cv2.imread(str(args.image), cv2.IMREAD_COLOR)
     if image is None:
         raise ValueError(f"Could not read image: {args.image}")

@@ -12,8 +12,8 @@
     "title": "DP233162"
   },
   "paths": {
-    "archived_image": "data\\archived_images\\h4.png",
-    "watermarked_image": "data\\watermarked_images\\h4_watermarked.png"
+    "archived_image": "data/archived_images/h4.png",
+    "watermarked_image": "data/watermarked_images/h4_watermarked.png"
   },
   "payload": "h4|DP233162|2026-07-06T08:16:23.217050+00:00",
   "quality_metrics": {

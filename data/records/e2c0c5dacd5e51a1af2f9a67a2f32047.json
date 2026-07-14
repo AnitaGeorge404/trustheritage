@@ -12,8 +12,8 @@
     "title": "Untitled"
   },
   "paths": {
-    "archived_image": "data\\archived_images\\e2c0c5dacd5e51a1af2f9a67a2f32047.png",
-    "watermarked_image": "data\\watermarked_images\\e2c0c5dacd5e51a1af2f9a67a2f32047_watermarked.png"
+    "archived_image": "data/archived_images/e2c0c5dacd5e51a1af2f9a67a2f32047.png",
+    "watermarked_image": "data/watermarked_images/e2c0c5dacd5e51a1af2f9a67a2f32047_watermarked.png"
   },
   "payload": "e2c0c5dacd5e51a1af2f9a67a2f32047|Untitled|2026-07-01T13:37:28.681287+00:00"
 }

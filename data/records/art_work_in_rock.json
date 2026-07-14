@@ -12,8 +12,8 @@
     "title": "Untitled"
   },
   "paths": {
-    "archived_image": "data\\archived_images\\art_work_in_rock.png",
-    "watermarked_image": "data\\watermarked_images\\art_work_in_rock_watermarked.png"
+    "archived_image": "data/archived_images/art_work_in_rock.png",
+    "watermarked_image": "data/watermarked_images/art_work_in_rock_watermarked.png"
   },
   "payload": "art_work_in_rock|Untitled|2026-07-06T06:28:33.214936+00:00",
   "quality_metrics": {

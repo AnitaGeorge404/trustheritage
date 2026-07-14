@@ -12,8 +12,8 @@
     "title": "DP234672"
   },
   "paths": {
-    "archived_image": "data\\archived_images\\h5.png",
-    "watermarked_image": "data\\watermarked_images\\h5_watermarked.png"
+    "archived_image": "data/archived_images/h5.png",
+    "watermarked_image": "data/watermarked_images/h5_watermarked.png"
   },
   "payload": "h5|DP234672|2026-07-06T08:16:23.355067+00:00",
   "quality_metrics": {

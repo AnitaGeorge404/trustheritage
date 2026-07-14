@@ -1,25 +1,25 @@
 experiment_timestamp,key,value
-2026-07-06T08:16:33.898524+00:00,python_version,"3.12.0 (tags/v3.12.0:0fb18b0, Oct  2 2023, 13:03:39) [MSC v.1935 64 bit (AMD64)]"
-2026-07-06T08:16:33.898524+00:00,opencv_version,5.0.0
-2026-07-06T08:16:33.898524+00:00,pytorch_version,2.12.1+cpu
-2026-07-06T08:16:33.898524+00:00,openclip_version,3.3.0
-2026-07-06T08:16:33.898524+00:00,operating_system,Windows-11-10.0.26200-SP0
-2026-07-06T08:16:33.898524+00:00,random_seed,42
-2026-07-06T08:16:33.898524+00:00,config.IMAGE_SIZE,"(512, 512)"
-2026-07-06T08:16:33.898524+00:00,config.WATERMARK_SIZE,32
-2026-07-06T08:16:33.898524+00:00,config.WATERMARK_STRENGTH,7.0
-2026-07-06T08:16:33.898524+00:00,config.DEFAULT_WEIGHTS,"{'alpha': 0.25, 'beta': 0.25, 'gamma': 0.2, 'delta': 0.3}"
-2026-07-06T08:16:33.898524+00:00,acs_weight_alpha,0.25
-2026-07-06T08:16:33.898524+00:00,acs_weight_beta,0.25
-2026-07-06T08:16:33.898524+00:00,acs_weight_gamma,0.2
-2026-07-06T08:16:33.898524+00:00,acs_weight_delta,0.3
-2026-07-06T08:16:33.898524+00:00,decision_threshold_authentic_min,0.85
-2026-07-06T08:16:33.898524+00:00,decision_threshold_suspicious_min,0.6
-2026-07-06T08:16:33.898524+00:00,decision_threshold_likely_tampered_below,0.6
-2026-07-06T08:16:33.898524+00:00,openclip_model,ViT-B-32
-2026-07-06T08:16:33.898524+00:00,openclip_pretrained_checkpoint,laion2b_s34b_b79k
-2026-07-06T08:16:33.898524+00:00,records_dir,D:\Projects\Chords\trustheritage\data\records
-2026-07-06T08:16:33.898524+00:00,archived_images_dir,D:\Projects\Chords\trustheritage\data\archived_images
-2026-07-06T08:16:33.898524+00:00,watermarked_images_dir,D:\Projects\Chords\trustheritage\data\watermarked_images
-2026-07-06T08:16:33.898524+00:00,suspect_uploads_dir,D:\Projects\Chords\trustheritage\data\suspect_uploads
-2026-07-06T08:16:33.898524+00:00,outputs_dir,D:\Projects\Chords\trustheritage\data\outputs
+2026-07-14T10:24:48.716243+00:00,python_version,"3.12.0 (tags/v3.12.0:0fb18b0, Oct  2 2023, 13:03:39) [MSC v.1935 64 bit (AMD64)]"
+2026-07-14T10:24:48.716243+00:00,opencv_version,4.13.0
+2026-07-14T10:24:48.716243+00:00,pytorch_version,2.12.1+cu126
+2026-07-14T10:24:48.716243+00:00,openclip_version,3.3.0
+2026-07-14T10:24:48.716243+00:00,operating_system,Windows-11-10.0.26200-SP0
+2026-07-14T10:24:48.716243+00:00,random_seed,42
+2026-07-14T10:24:48.716243+00:00,config.IMAGE_SIZE,"(512, 512)"
+2026-07-14T10:24:48.716243+00:00,config.WATERMARK_SIZE,32
+2026-07-14T10:24:48.716243+00:00,config.WATERMARK_STRENGTH,7.0
+2026-07-14T10:24:48.716243+00:00,config.DEFAULT_WEIGHTS,"{'alpha': 0.25, 'beta': 0.25, 'gamma': 0.2, 'delta': 0.3}"
+2026-07-14T10:24:48.716243+00:00,acs_weight_alpha,0.25
+2026-07-14T10:24:48.716243+00:00,acs_weight_beta,0.25
+2026-07-14T10:24:48.716243+00:00,acs_weight_gamma,0.2
+2026-07-14T10:24:48.716243+00:00,acs_weight_delta,0.3
+2026-07-14T10:24:48.716243+00:00,decision_threshold_authentic_min,0.85
+2026-07-14T10:24:48.716243+00:00,decision_threshold_suspicious_min,0.6
+2026-07-14T10:24:48.716243+00:00,decision_threshold_likely_tampered_below,0.6
+2026-07-14T10:24:48.716243+00:00,openclip_model,ViT-B-32
+2026-07-14T10:24:48.716243+00:00,openclip_pretrained_checkpoint,laion2b_s34b_b79k
+2026-07-14T10:24:48.716243+00:00,records_dir,D:\Projects\Chords\trustheritage\data\records
+2026-07-14T10:24:48.716243+00:00,archived_images_dir,D:\Projects\Chords\trustheritage\data\archived_images
+2026-07-14T10:24:48.716243+00:00,watermarked_images_dir,D:\Projects\Chords\trustheritage\data\watermarked_images
+2026-07-14T10:24:48.716243+00:00,suspect_uploads_dir,D:\Projects\Chords\trustheritage\data\suspect_uploads
+2026-07-14T10:24:48.716243+00:00,outputs_dir,D:\Projects\Chords\trustheritage\data\outputs

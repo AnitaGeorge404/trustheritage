@@ -60,6 +60,8 @@ def json_canonical_bytes(data: dict[str, Any]) -> bytes:
 
 def read_image(path: Path) -> np.ndarray:
     """Read an image as BGR uint8, raising a clear error on failure."""
+    if not path.exists():
+        raise FileNotFoundError(f"Image not found: {path}")
     image = cv2.imread(str(path), cv2.IMREAD_COLOR)
     if image is None:
         raise ValueError(f"Could not read image: {path}")

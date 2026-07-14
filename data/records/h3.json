@@ -12,8 +12,8 @@
     "title": "DP-14201-003"
   },
   "paths": {
-    "archived_image": "data\\archived_images\\h3.png",
-    "watermarked_image": "data\\watermarked_images\\h3_watermarked.png"
+    "archived_image": "data/archived_images/h3.png",
+    "watermarked_image": "data/watermarked_images/h3_watermarked.png"
   },
   "payload": "h3|DP-14201-003|2026-07-06T08:16:23.062420+00:00",
   "quality_metrics": {

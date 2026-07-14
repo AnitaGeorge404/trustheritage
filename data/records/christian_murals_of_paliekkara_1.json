@@ -12,8 +12,8 @@
     "title": "Untitled"
   },
   "paths": {
-    "archived_image": "data\\archived_images\\christian_murals_of_paliekkara_1.png",
-    "watermarked_image": "data\\watermarked_images\\christian_murals_of_paliekkara_1_watermarked.png"
+    "archived_image": "data/archived_images/christian_murals_of_paliekkara_1.png",
+    "watermarked_image": "data/watermarked_images/christian_murals_of_paliekkara_1_watermarked.png"
   },
   "payload": "christian_murals_of_paliekkara_1|Untitled|2026-07-04T17:10:35.664829+00:00"
 }

@@ -133,6 +133,8 @@ def format_cell(value: Any) -> Any:
 
 def read_image(path: Path) -> np.ndarray:
     """Read a BGR image, raising a clear error if OpenCV cannot load it."""
+    if not path.exists():
+        raise FileNotFoundError(f"Image not found: {path}")
     image = cv2.imread(str(path), cv2.IMREAD_COLOR)
     if image is None:
         raise ValueError(f"Could not read image: {path}")

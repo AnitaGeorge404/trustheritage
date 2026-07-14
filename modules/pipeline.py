@@ -77,8 +77,8 @@ def register_image(
         "metadata": metadata,
         "payload": payload,
         "paths": {
-            "archived_image": str(archived_path.relative_to(record_path.parent.parent.parent)),
-            "watermarked_image": str(watermarked_path.relative_to(record_path.parent.parent.parent)),
+            "archived_image": archived_path.relative_to(record_path.parent.parent.parent).as_posix(),
+            "watermarked_image": watermarked_path.relative_to(record_path.parent.parent.parent).as_posix(),
         },
         "hashes": hashes,
         "quality_metrics": quality_metrics,
@@ -98,8 +98,8 @@ def verify_image(record_path: Path, suspect_path: Path, use_semantics: bool = Tr
     """Verify a suspect image against an archived TrustHeritage record."""
     record = load_json(record_path)
     base_dir = record_path.parent.parent.parent
-    archived_path = base_dir / record["paths"]["archived_image"]
-    watermarked_path = base_dir / record["paths"]["watermarked_image"]
+    archived_path = base_dir / Path(record["paths"]["archived_image"].replace("\\", "/"))
+    watermarked_path = base_dir / Path(record["paths"]["watermarked_image"].replace("\\", "/"))
 
     archived_image = load_and_preprocess(archived_path)
     watermarked_image = load_and_preprocess(watermarked_path)

@@ -12,8 +12,8 @@
     "title": "DT7195"
   },
   "paths": {
-    "archived_image": "data\\archived_images\\h1.png",
-    "watermarked_image": "data\\watermarked_images\\h1_watermarked.png"
+    "archived_image": "data/archived_images/h1.png",
+    "watermarked_image": "data/watermarked_images/h1_watermarked.png"
   },
   "payload": "h1|DT7195|2026-07-06T08:16:22.798589+00:00",
   "quality_metrics": {

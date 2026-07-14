@@ -12,8 +12,8 @@
     "title": "Untitled"
   },
   "paths": {
-    "archived_image": "data\\archived_images\\3075892afe686e939eae01da433ea010.png",
-    "watermarked_image": "data\\watermarked_images\\3075892afe686e939eae01da433ea010_watermarked.png"
+    "archived_image": "data/archived_images/3075892afe686e939eae01da433ea010.png",
+    "watermarked_image": "data/watermarked_images/3075892afe686e939eae01da433ea010_watermarked.png"
   },
   "payload": "3075892afe686e939eae01da433ea010|Untitled|2026-07-06T04:33:26.878853+00:00"
 }
